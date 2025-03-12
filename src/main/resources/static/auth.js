@@ -26,17 +26,26 @@ document.addEventListener("DOMContentLoaded", function () {
         const email = document.getElementById("regEmail").value;
         const password = document.getElementById("regPassword").value;
 
-        const response = await fetch("/api/auth/register", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, password })
-        });
+        const formData = new URLSearchParams();
+        formData.append("email", email);
+        formData.append("password", password);
 
-        if (response.ok) {
-            alert("Registro exitoso, ahora inicia sesión.");
-            showLogin.click();
-        } else {
-            alert("Error en el registro. Inténtalo nuevamente.");
+        try {
+            const response = await fetch("/api/auth/register", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: formData
+            });
+
+            if (response.ok) {
+                alert("Registro exitoso, ahora inicia sesión.");
+                showLogin.click();
+            } else {
+                const errorText = await response.text();
+                alert("Error en el registro: " + errorText);
+            }
+        } catch (error) {
+            alert("Error en la conexión: " + error.message);
         }
     });
 
@@ -47,19 +56,27 @@ document.addEventListener("DOMContentLoaded", function () {
         const email = document.getElementById("loginEmail").value;
         const password = document.getElementById("loginPassword").value;
 
-        const response = await fetch("/api/auth/login", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, password })
-        });
+        const formData = new URLSearchParams();
+        formData.append("email", email);
+        formData.append("password", password);
 
-        if (response.ok) {
-            const data = await response.json();
-            document.cookie = `token=${data.token}; path=/; Secure; HttpOnly`;
-            alert("Inicio de sesión exitoso.");
-            window.location.href = "index.html";
-        } else {
-            alert("Credenciales incorrectas. Intenta nuevamente.");
+        try {
+            const response = await fetch("/api/auth/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: formData
+            });
+
+            if (response.ok) {
+                const data = await response.text();
+                alert("Inicio de sesión exitoso: " + data);
+                window.location.href = "index.html";
+            } else {
+                const errorText = await response.text();
+                alert("Error en el login: " + errorText);
+            }
+        } catch (error) {
+            alert("Error en la conexión: " + error.message);
         }
     });
 });

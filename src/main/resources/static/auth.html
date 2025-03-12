@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autenticación</title>
+    <link rel="stylesheet" href="auth.css">
+</head>
+<h1>Gestión de Propiedades</h1>
+<body>
+<div class="auth-container">
+    <div class="tabs">
+        <button id="showLogin" class="active">Iniciar Sesión</button>
+        <button id="showRegister">Registrarse</button>
+    </div>
+
+    <div class="form-container">
+
+        <form id="loginForm" class="auth-form">
+            <input type="email" id="loginEmail" placeholder="Correo Electrónico" required>
+            <input type="password" id="loginPassword" placeholder="Contraseña" required>
+            <button type="submit">Iniciar Sesión</button>
+        </form>
+
+        <form id="registerForm" class="auth-form hidden">
+            <input type="email" id="regEmail" placeholder="Correo Electrónico" required>
+            <input type="password" id="regPassword" placeholder="Contraseña" required>
+            <button type="submit">Registrarse</button>
+        </form>
+    </div>
+</div>
+
+<script src="auth.js"></script>
+</body>
+</html>

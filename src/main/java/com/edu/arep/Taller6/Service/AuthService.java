@@ -15,6 +15,10 @@ public class AuthService {
     private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public User registerU(String email, String password){
+        Optional<User> existingUser = userRepository.findByEmail(email);
+        if (existingUser.isPresent()) {
+            throw new RuntimeException("El usuario ya existe");
+        }
         String hashps = passwordEncoder.encode(password);
         User user = new User(email, hashps);
         return userRepository.save(user);

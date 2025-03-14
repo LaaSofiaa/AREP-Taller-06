@@ -3,22 +3,7 @@
 
 En este taller de Arquitectura Empresarial, se diseñará y desplegará una aplicación segura y escalable en AWS. La arquitectura incluirá un servidor Apache para servir un cliente HTML+JavaScript de forma asíncrona y protegida con TLS, y un servidor Spring para manejar servicios RESTful también con TLS. Se implementará autenticación con contraseñas y certificados TLS emitidos por Let’s Encrypt.
 
-## Tabla de Contenido
 
-1. [Instalación](#instalación)  
-2. [Arquitectura del Proyecto](#arquitectura-del-proyecto)  
-   - [Estructura del Directorio](#estructura-del-directorio)  
-   - [Capas del Proyecto](#capas-del-proyecto)  
-   - [Diseño de Clases](#diseño-de-clases)  
-   - [Diagrama del Proyecto](#diagrama-del-proyecto)  
-3. [Docker Despliegue Local](#docker-despliegue-local-imagen)  
-4. [Docker y AWS](#docker-y-aws)  
-   - [Subida de la Imagen a Docker Hub](#subida-de-la-imagen-a-docker-hub)  
-   - [Configuración en AWS](#configuración-en-aws)  
-5. [Pruebas Automatizadas](#pruebas-automatizadas)  
-6. [Autor](#autor)   
-
-  
 ## Instalación
 
 **1.**  Clonar el repositorio
@@ -119,6 +104,10 @@ El sistema sigue el patrón MVC (Modelo-Vista-Controlador), y sus principales cl
   
   1. `PropertyService.java`: Implementa la lógica de negocio y operaciones sobre las propiedades.
   2. `AuthService.java`: Maneja la lógica de autenticación y registro de usuarios, encriptando las contraseñas con BCryptPasswordEncoder al registrar un nuevo usuario y validando las credenciales durante el inicio de sesión.
+ 
+     El proceso de encriptación de contraseñas utiliza BCryptPasswordEncoder de Spring Security, que encripta la contraseña del usuario utilizando el algoritmo BCrypt, un algoritmo seguro que genera un hash único para cada contraseña, incluso si dos usuarios tienen la misma contraseña. Este hash incluye un sal aleatorio que aumenta la seguridad, previniendo ataques de diccionario o fuerza bruta. Al registrar un usuario, la contraseña se encripta y se almacena el hash en la base de datos. Al iniciar sesión, se compara la contraseña ingresada con el hash almacenado utilizando el método matches(), sin necesidad de desencriptar la contraseña.
+
+     
 - **Controlador**
   
   1. `PropertyController.java`: Expone los endpoints REST para la gestión de propiedades.
@@ -127,81 +116,43 @@ El sistema sigue el patrón MVC (Modelo-Vista-Controlador), y sus principales cl
     
 ### Diagrama del proyecto
 
-
-
-
-## Docker despliegue local imagen
-
- 
-
+![image](https://github.com/user-attachments/assets/5c422488-88f1-4267-825b-6ea0ad70dc98)
 
 ## Docker y AWS
-
-### Subida de la Imagen a Docker Hub  
-Para facilitar el despliegue, se creó una imagen Docker del backend y se subió a Docker Hub. El proceso fue el siguiente:  
-
-1. Construcción de la imagen Docker:
-   
-```bash
-  docker build -t usuario/docker-repo:latest .
-```
-
-2. Inicio de sesión en Docker Hub:
-
-```bash
-  docker login
-```
-3. Subida de la imagen al repositorio
-   
-```bash
-  docker push usuario/docker-repo:latest
-```
-
-### Configuración en AWS
-Después de subir la imagen, se creó una instancia en AWS EC2 para ejecutarla.
-
 1. **Creación de la instancia**
+
+   Asi se crearon todas las instancias Apache, Spring, MySql
 
 [Ver video de demostración](https://youtu.be/26UW_WXy4Yc)
 
-https://github.com/user-attachments/assets/158e8f24-0ff5-4901-b8f8-3bd8e0203a28
 
-2. **Instalación de Docker base de datos en la instancia**
+2. **Demostración**
+
+[Ver video de demostración](https://youtu.be/wuQp0Pf7BV0)
+
+## Comandos para obtener el certificado 
+
+### Paso 1
+Instalar cerbot
+```bash
+  sudo yum install certbot -y
+   sudo yum install python3-certbot-apache -y
+```
+### Paso 2
+
+Una vez instalado Certbot, puedes generar el certificado SSL para tu dominio.
 
 ```bash
-  sudo yum update -y
-  sudo yum install docker
-  sudo service docker start
-  sudo usermod -a -G docker ec2-user
-  docker run --name mysql-properties \
-  -e MYSQL_ROOT_PASSWORD=secret \
-  -e MYSQL_DATABASE=properties \
-  -e MYSQL_USER=user \
-  -e MYSQL_PASSWORD=secret \
-  -p 3306:3306 \
-  -d mysql:latest
+  sudo certbot --apache -d ejemplo.com -d www.ejemplo.com
 ```
-3. **Descarga y ejecución de la imagen desde DockerHub**
+### Paso 3
+
+Después de instalar el certificado SSL, es posible que debas reiniciar tu servidor web para que los cambios surtan efecto.
 
 ```bash
-  docker pull usuario/docker-repo:latest
-  docker run -d -p 8080:8080 usuario/docker-repo:latest
+  sudo systemctl restart httpd
+  sudo systemctl status httpd
 ```
-
-3. **Verificación del despliegue**
-   Se verifica que el contenedor estuviera corriendo con:
-
-```bash
-  docker ps
-```
-
-  Finalmente, se accedió a la aplicación desde el navegador usando la dirección pública de la instancia:
-  
-```bash
-  http://<IP-PUBLICA-AWS>:8080
-```
-
-
 
 ## Pruebas Automatizadas
 

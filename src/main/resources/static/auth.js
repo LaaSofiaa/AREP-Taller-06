@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", function () {
         formData.append("password", password);
 
         try {
-            const response = await fetch("/api/auth/register", {
+            const response = await fetch("https://gestionpropiedadesbackend.duckdns.org/api/auth/register", {
                 method: "POST",
                 headers: { "Content-Type": "application/x-www-form-urlencoded" },
                 body: formData
@@ -61,7 +61,7 @@ document.addEventListener("DOMContentLoaded", function () {
         formData.append("password", password);
 
         try {
-            const response = await fetch("/api/auth/login", {
+            const response = await fetch("https://gestionpropiedadesbackend.duckdns.org/api/auth/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/x-www-form-urlencoded" },
                 body: formData

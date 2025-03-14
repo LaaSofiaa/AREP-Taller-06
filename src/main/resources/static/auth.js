@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const showLogin = document.getElementById("showLogin");
     const showRegister = document.getElementById("showRegister");
 
-    // Cambiar entre pestañas de Login y Registro
+    // Cambiar entre pestañas
     showLogin.addEventListener("click", () => {
         loginForm.classList.remove("hidden");
         registerForm.classList.add("hidden");
@@ -26,15 +26,11 @@ document.addEventListener("DOMContentLoaded", function () {
         const email = document.getElementById("regEmail").value;
         const password = document.getElementById("regPassword").value;
 
-        const formData = new URLSearchParams();
-        formData.append("email", email);
-        formData.append("password", password);
-
         try {
-            const response = await fetch("https://gestionpropiedadesbackend.duckdns.org:8080/api/auth/register", {
+            const response = await fetch("https://gestionpropiedadesbackend.duckdns.org/api/auth/register", {
                 method: "POST",
-                headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                body: formData
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password })
             });
 
             if (response.ok) {
@@ -56,15 +52,11 @@ document.addEventListener("DOMContentLoaded", function () {
         const email = document.getElementById("loginEmail").value;
         const password = document.getElementById("loginPassword").value;
 
-        const formData = new URLSearchParams();
-        formData.append("email", email);
-        formData.append("password", password);
-
         try {
-            const response = await fetch("https://gestionpropiedadesbackend.duckdns.org:8080/api/auth/login", {
+            const response = await fetch("https://gestionpropiedadesbackend.duckdns.org/api/auth/login", {
                 method: "POST",
-                headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                body: formData
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password })
             });
 
             if (response.ok) {

@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const password = document.getElementById("regPassword").value;
 
         try {
-            const response = await fetch("https://gestionpropiedadesbackend.duckdns.org/api/auth/register", {
+            const response = await fetch("https://gestionpropiedadesbackend.duckdns.org:8080/api/auth/register", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email, password })
@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const password = document.getElementById("loginPassword").value;
 
         try {
-            const response = await fetch("https://gestionpropiedadesbackend.duckdns.org/api/auth/login", {
+            const response = await fetch("https://gestionpropiedadesbackend.duckdns.org:8080/api/auth/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email, password })

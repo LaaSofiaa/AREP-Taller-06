@@ -17,20 +17,15 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody Map<String, String> request) {
-        String email = request.get("email");
-        String password = request.get("password");
-        authService.registerU(email, password);
+    public ResponseEntity<String> register(@RequestBody User user) {
+        authService.registerU(user.getEmail(), user.getPassword());
         return ResponseEntity.ok("Registro Exitoso");
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody Map<String, String> request) {
-        String email = request.get("email");
-        String password = request.get("password");
-
-        Optional<User> user = authService.loginU(email, password);
-        if (user.isPresent()) {
+    public ResponseEntity<String> login(@RequestBody User user) {
+        Optional<User> loggedUser = authService.loginU(user.getEmail(), user.getPassword());
+        if (loggedUser.isPresent()) {
             return ResponseEntity.ok("Login Exitoso");
         } else {
             return ResponseEntity.status(401).body("Credenciales NO válidas");
